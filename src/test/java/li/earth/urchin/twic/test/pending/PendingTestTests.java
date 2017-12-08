@@ -85,6 +85,63 @@ public class PendingTestTests {
     }
 
     @Test
+    public void improperlyFailingPendingTestWithMatchFails() {
+        class ImproperlyFailingPendingTest extends TestBase {
+            @Override
+            public void test() {
+                if (true) throw failure;
+                pendingTest.shouldFailAfterThis(equalTo(failure));
+                pendingTest.shouldFailBeforeThis();
+            }
+        }
+
+        assertThat(testFor(new ImproperlyFailingPendingTest()), failsWith(equalTo(failure)));
+    }
+
+    @Test
+    public void properlyFailingPendingTestWithMatchPasses() {
+        class ProperlyFailingPendingTest extends TestBase {
+            @Override
+            public void test() {
+                pendingTest.shouldFailAfterThis(equalTo(failure));
+                if (true) throw failure;
+                pendingTest.shouldFailBeforeThis();
+            }
+        }
+
+        assertThat(testFor(new ProperlyFailingPendingTest()), passes());
+    }
+
+    @Test
+    public void incorrectlyFailingPendingTestWithMatchFails() {
+        AssertionError anotherFailure = new AssertionError("also broken");
+
+        class ProperlyFailingPendingTest extends TestBase {
+            @Override
+            public void test() {
+                pendingTest.shouldFailAfterThis(equalTo(failure));
+                if (true) throw anotherFailure;
+                pendingTest.shouldFailBeforeThis();
+            }
+        }
+
+        assertThat(testFor(new ProperlyFailingPendingTest()), failsWith(equalTo(anotherFailure)));
+    }
+
+    @Test
+    public void improperlyPassingPendingTestWithMatchFails() {
+        class ImproperlyPassingPendingTest extends TestBase {
+            @Override
+            public void test() {
+                pendingTest.shouldFailAfterThis(equalTo(failure));
+                pendingTest.shouldFailBeforeThis();
+            }
+        }
+
+        assertThat(testFor(new ImproperlyPassingPendingTest()), failsWith(instanceOf(AssertionError.class)));
+    }
+
+    @Test
     public void testWithUnfinishedPendFails() throws Exception {
         class UnfinishedPend extends TestBase {
             @Override
