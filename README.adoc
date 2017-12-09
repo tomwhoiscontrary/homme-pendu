@@ -32,6 +32,8 @@ public class WidgetTests {
 <1> The call to shouldFailAfterThis marks the start of the region of the test where failure is expected, and can optionally specify the exception with which the test fails
 <2> The call to shouldFailBeforeThis marks the end of the region of the test where failure is expected
 
-When the test runs, the rule intercepts any exception thrown from the test; if the exception thrown is from the marked region of the test, and is as specified, then it is suppressed, and the test passes. If any other exception is thrown, the test fails as usual. If no exception is thrown, the test fails - this indicates that the feature has been implemented, and the test should no longer be pending! The test also fails if the marking methods are misused.
+When the test runs, the rule intercepts any exception thrown from the test; if the exception thrown is from the marked region of the test, and is as specified, then it is suppressed, and the test is ignored (by treating it has having a false https://github.com/junit-team/junit4/wiki/assumptions-with-assume[assumption]). If any other exception is thrown, the test fails as usual. If no exception is thrown, the test fails - this indicates that the feature has been implemented, and the test should no longer be pending! The test also fails if the marking methods are misused.
 
 The key difference to Tony's PendingRule is that the expected failure can be scoped to a specific region of the test, and a specific exception. This means that if a pending test is broken by unrelated changes to the code (affecting test setup, typically), it will fail, rather than erroneously passing.
+
+The fact that pending tests are ignored rather than passing is also a significant difference.
