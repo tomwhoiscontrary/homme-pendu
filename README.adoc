@@ -5,3 +5,33 @@ While working at https://github.com/tim-group[TIM Group], i had the pleasure of 
 .The https://en.wikipedia.org/wiki/The_Hanged_Man_(Tarot_card)[hanged man] of the Egyptian tarot. Image courtesy of https://commons.wikimedia.org/wiki/File:Egyptian_Tarot_(Falconnier)_12.png[Wikimedia]
 [caption=""]
 image::homme-pendu.png[The hanged man of the Egyptian tarot,align="center"]
+
+As an example, let's say you're writing an application to manufacture widgets. Widgets are made in moulds of a certain size, and a widget's size matches that of its mould. You write a test to specify as much, but you aren't in a position to implement the method to get a widget's size yet; you would like to throw an exception from that method, and leave the test pending. Here's what you do:
+
+[source,java]
+----
+public class WidgetTests {
+
+    @Rule
+    public final PendingTest pendingTest = new PendingTest();
+
+    @Test
+    public void sizeIsTakenFromTheMould() {
+        WidgetMould widgetMould = new WidgetMould(4);
+        Widget widget = widgetMould.cast();
+
+        pendingTest.shouldFailAfterThis(instanceOf(UnsupportedOperationException.class)); // <1>
+        int size = widget.getSize();
+        pendingTest.shouldFailBeforeThis(); // <2>
+
+        assertThat(size, equalTo(4));
+    }
+
+}
+----
+<1> The call to shouldFailAfterThis marks the start of the region of the test where failure is expected, and can optionally specify the exception with which the test fails
+<2> The call to shouldFailBeforeThis marks the end of the region of the test where failure is expected
+
+When the test runs, the rule intercepts any exception thrown from the test; if the exception thrown is from the marked region of the test, and is as specified, then it is suppressed, and the test passes. If any other exception is thrown, the test fails as usual. If no exception is thrown, the test fails - this indicates that the feature has been implemented, and the test should no longer be pending! The test also fails if the marking methods are misused.
+
+The key difference to Tony's PendingRule is that the expected failure can be scoped to a specific region of the test, and a specific exception. This means that if a pending test is broken by unrelated changes to the code (affecting test setup, typically), it will fail, rather than erroneously passing.
