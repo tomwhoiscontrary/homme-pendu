@@ -1,7 +1,7 @@
 package li.earth.urchin.twic.test.pending;
 
+import org.hamcrest.CoreMatchers;
 import org.hamcrest.Matcher;
-import org.hamcrest.Matchers;
 import org.junit.rules.TestRule;
 import org.junit.runner.Description;
 import org.junit.runners.model.Statement;
@@ -28,7 +28,7 @@ public class PendingTest implements TestRule {
     }
 
     public void shouldFailAfterThis() {
-        shouldFailAfterThis(Matchers.notNullValue());
+        shouldFailAfterThis(CoreMatchers.notNullValue());
     }
 
     public void shouldFailBeforeThis() {
