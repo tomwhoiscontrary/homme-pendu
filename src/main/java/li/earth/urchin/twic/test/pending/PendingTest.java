@@ -2,11 +2,18 @@ package li.earth.urchin.twic.test.pending;
 
 import org.hamcrest.CoreMatchers;
 import org.hamcrest.Matcher;
+import org.junit.AssumptionViolatedException;
 import org.junit.rules.TestRule;
 import org.junit.runner.Description;
 import org.junit.runners.model.Statement;
 
 public class PendingTest implements TestRule {
+
+    public static class Pending extends AssumptionViolatedException {
+        public Pending(Throwable actual, Matcher<? super Throwable> matcher) {
+            super(actual, matcher);
+        }
+    }
 
     public static class Failure extends AssertionError {
         public Failure(String message) {
@@ -48,7 +55,7 @@ public class PendingTest implements TestRule {
                 } catch (Failure | SetupError e) {
                     throw e;
                 } catch (Throwable e) {
-                    if (matcher != null && matcher.matches(e)) return;
+                    if (matcher != null && matcher.matches(e)) throw new Pending(e, matcher);
                     else throw e;
                 }
 

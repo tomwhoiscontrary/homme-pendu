@@ -58,7 +58,7 @@ public class PendingTestTests {
     }
 
     @Test
-    public void properlyFailingPendingTestPasses() {
+    public void properlyFailingPendingTestIsIgnored() {
         class ProperlyFailingPendingTest extends TestBase {
             @Override
             public void test() {
@@ -68,7 +68,7 @@ public class PendingTestTests {
             }
         }
 
-        assertThat(testFor(new ProperlyFailingPendingTest()), passes());
+        assertThat(testFor(new ProperlyFailingPendingTest()), isIgnored());
     }
 
     @Test
@@ -99,7 +99,7 @@ public class PendingTestTests {
     }
 
     @Test
-    public void properlyFailingPendingTestWithMatchPasses() {
+    public void properlyFailingPendingTestWithMatchIsIgnored() {
         class ProperlyFailingPendingTest extends TestBase {
             @Override
             public void test() {
@@ -109,7 +109,7 @@ public class PendingTestTests {
             }
         }
 
-        assertThat(testFor(new ProperlyFailingPendingTest()), passes());
+        assertThat(testFor(new ProperlyFailingPendingTest()), isIgnored());
     }
 
     @Test
@@ -240,4 +240,9 @@ public class PendingTestTests {
             }
         };
     }
+
+    private Matcher<Statement> isIgnored() {
+        return failsWith(instanceOf(PendingTest.Pending.class));
+    }
+
 }
