@@ -1,5 +1,7 @@
 A JUnit test rule for pending tests: those which pass up to a point, and then fail in a known and, for the time being, acceptable way.
 
+image:https://img.shields.io/bintray/v/tomwhoiscontrary/maven/homme-pendu.svg[Bintray] Get it from https://bintray.com/bintray/jcenter[JCenter] at li.earth.urchin.twic:homme-pendu
+
 While working at https://github.com/tim-group[TIM Group], i had the pleasure of working with Tony Tsui's https://github.com/ttsui/pending[PendingRule]. This library is an attempt to implement the same idea in a slightly different way.
 
 .The https://en.wikipedia.org/wiki/The_Hanged_Man_(Tarot_card)[hanged man] of the Egyptian tarot. Image courtesy of https://commons.wikimedia.org/wiki/File:Egyptian_Tarot_(Falconnier)_12.png[Wikimedia]
